@@ -36,13 +36,14 @@
         return;
     }
 
-    // Generate a string as long as indicated in the GET parameter this
+    // Generate a string as long as indicated in the GET parameter. This
     // will generate a plain text of the same number of bytes as
-    // characters in this string. The attacker shouldn't be able to see
+    // characters in the string. The attacker shouldn't be able to see
     // the string nor the type of resource because they are encrypted.
     
     // We generate a pseudo-random string to minimize the effect of
-    // possible  HTTP compression, as it would not match the target size.
+    // possible  HTTP compression, as it would make the request not match
+    // the target size.
     $str .= random_bytes($sz);
 
     // Echo the string. There is no other HTML content. The browser should
