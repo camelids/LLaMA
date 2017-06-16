@@ -31,7 +31,7 @@
         return;
     }
 
-    // check the parameter value is an integer
+    // Check that the parameter value is an integer
     if (!(is_numeric($sz))) {
         return;
     }
