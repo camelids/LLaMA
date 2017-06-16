@@ -1,5 +1,5 @@
 <?php
-    // This script can can provide LLAMA with custom-sized
+    // This script can provide LLaMA with custom-sized
     // resources.  This approach has the drawback to require a
     // third-party web server that runs this script. Note that
     // we have not used this approach in our evaluation, but since we
