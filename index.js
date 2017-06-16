@@ -1,6 +1,6 @@
-// This file implements the client-side defense as an add-on
-// for the Tor browser. It can be easily installed by following
-// the same procedure as with regular Firefox add-ons.
+// This file implements LLaMA, a client-side defense against WF,
+// as an add-on for the Tor browser. It can be easily installed
+// by following the same procedure as with any other FF add-ons.
 
 const { Cc, Ci } = require('chrome')
 const observerService = Cc["@mozilla.org/observer-service;1"].
