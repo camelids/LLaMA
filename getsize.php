@@ -11,7 +11,7 @@
     $str = "";
 
     // Using GET will make the URL observable (only) at the link from exit
-    // node to web server. This is fine given that the we assume the
+    // node to web server. This is fine given that we assume the
     // attacker is at the link between client and guard. Also, it will
     // allow Tor exit nodes to track the use of the extension (but also
     // block it). 
