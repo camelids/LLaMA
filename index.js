@@ -1,8 +1,9 @@
+"use strict";
 // This file implements LLaMA, a client-side defense against WF,
 // as an add-on for the Tor browser. It can be easily installed
 // by following the same procedure as with any other FF add-ons.
 
-const { Cc, Ci } = require('chrome')
+const { Cc, Ci } = require('chrome');
 const observerService = Cc["@mozilla.org/observer-service;1"].
                         getService(Ci.nsIObserverService);
 const URL = "https://tablog-webfpext.rhcloud.com/getsize.php";
@@ -37,12 +38,12 @@ var sendRequest = function(target) {
     // log extra request
     console.log("X-REQ: " + target);
     req.get();
-}
+};
 
 // send a custom-sized request
 var sendSizeRequest = function(size) {
     sendRequest(URL + '?size=' + size);
-}
+};
 
 // send a request depending on the outcome of tossing a coin
 var probSendRequest = function(sendRequestCallback, arg, delay) {
@@ -55,23 +56,23 @@ var probSendRequest = function(sendRequestCallback, arg, delay) {
             sendRequestCallback(arg);
         });
     }
-}
+};
 
 // trigger another request with some prob
 var customNewRequest = function() {
     var size = Math.floor(Math.random() * 1000001);
     probSendRequest(sendSizeRequest, size);
-}
+};
 
 // repeat a previous request with some prob
 var repeatRandomRequest = function(domain) {
     var requests = DOMAINS[domain];
     // select a previous request uniformly at random
-    if (!(typeof requests === "undefined") && (requests.length > 0)) {
+    if ( (typeof requests !== "undefined") && (requests.length > 0)) {
         var url = requests[Math.floor(Math.random() * requests.length)];
         probSendRequest(sendRequest, url, 0);
     }
-}
+};
 
 // delay the execution of a function
 var delayedFunction = function(delay, fun) {
@@ -81,7 +82,7 @@ var delayedFunction = function(delay, fun) {
             fun();
         }
     }, delay, Ci.nsITimer.TYPE_ONE_SHOT);
-}
+};
 
 var httpObs = {
     observe: function(aSubject, aTopic, aData) {
@@ -95,10 +96,10 @@ var httpObs = {
 
                 // add url for this domain
                 if (aSubject.URI instanceof Ci.nsIURI) {
-                    var requestHeaders = visitor.visitRequest();
+                    let requestHeaders = visitor.visitRequest();
                     var domain = aSubject.URI.host;
-                    var url = aSubject.URI.spec;
-                    var sheaders = get_str(requestHeaders);
+                    let url = aSubject.URI.spec;
+                    let sheaders = get_str(requestHeaders);
                     console.log("REQ: " + url + ", headers=" + sheaders);
 
                     // add domain to known domains
@@ -113,7 +114,7 @@ var httpObs = {
                     if (DELAY) {
                         aSubject.suspend();
                         // sample a delay
-                        d = Math.floor(Math.random() * MEDIAN_TOTAL);
+                        var d = Math.floor(Math.random() * MEDIAN_TOTAL);
                         delayedFunction(d, function() {
                             aSubject.resume();
                             console.log("RESUMED: " + url);
@@ -127,17 +128,17 @@ var httpObs = {
                 }
             }
         } else if (aTopic == "http-on-examine-response") {
-            var url = aSubject.URI.asciiSpec;
-            var responseHeaders = visitor.visitResponse();
-            var sheaders = get_str(responseHeaders);
+            let url = aSubject.URI.asciiSpec;
+            let responseHeaders = visitor.visitResponse();
+            let sheaders = get_str(responseHeaders);
             console.log("RESP: " + url + ", headers=" + sheaders);
         }
-    },
+    }
 };
 
 function HeaderInfoVisitor(oHttp) {
     this.oHttp = oHttp;
-    this.headers = new Array();
+    this.headers = [];
 }
 
 HeaderInfoVisitor.prototype = {
@@ -157,3 +158,7 @@ HeaderInfoVisitor.prototype = {
 // register HTTP observers
 observerService.addObserver(httpObs, "http-on-modify-request", false);
 observerService.addObserver(httpObs, "http-on-examine-response", false);
+
+function get_str(object) {
+    return JSON.stringify(object);
+}
